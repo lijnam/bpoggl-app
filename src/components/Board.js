@@ -2,9 +2,10 @@ import React from 'react';
 import ScoreBoard from './ScoreBoard';
 import InputBox from './InputBox';
 import Characters from './Characters';
+import WordList from './WordList';
 class Board extends React.Component {
 
-   
+
 
     board () {
         return (< div className="row" >
@@ -14,6 +15,7 @@ class Board extends React.Component {
             </div>
             <div className="col-md-2">
                 <ScoreBoard></ScoreBoard>
+                <WordList></WordList>
             </div>
 
         </div >

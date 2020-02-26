@@ -1,14 +1,13 @@
 import React from 'react';
-
+import { connect } from "react-redux";
+import { getCharacters } from "../redux/actions";
 class Characters extends React.Component {
-
+    componentDidMount(){
+        this.props.getCharacters();
+    }
+    
     table () {
-        const characters = [
-            ['x', 'j', 'o', 'y'],
-            ['u', 'r', 't', 's'],
-            ['s', 'u', 'n', 's'],
-            ['i', 'o', 'a', 'l'],
-        ];
+        var characters = this.props.characters;
         var tableData = characters.map(row => {
             let td = row.map((ch, index) => {
                 return <td key={index}>{ch.toUpperCase()}</td>;
@@ -27,4 +26,11 @@ class Characters extends React.Component {
         return this.table();
     }
 }
-export default Characters;
+const mapStateToProps = state => {
+    let {characters} = state.boggleReducers === undefined ? [] : state.boggleReducers;
+    return { characters };
+};
+const mapDispatchToProps = {
+    getCharacters,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Characters);;

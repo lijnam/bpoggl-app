@@ -1,4 +1,4 @@
 import { combineReducers } from "redux";
-import wordReducers from "./wordReducers";
+import boggleReducers from "./boggleReducers";
 
-export default combineReducers({ wordReducers });
+export default combineReducers({ boggleReducers });

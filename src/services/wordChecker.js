@@ -17,8 +17,8 @@ async function search (board, k, l, used, word, current_char) {
                 && board[i][j] === word[current_char]
             ) {
                 current_char++;
-                
-                if (typeof word[current_char ] === "undefined") {
+
+                if (typeof word[current_char] === "undefined") {
                     return true;
                 }
                 used.push(i + '-' + j);
@@ -60,4 +60,24 @@ function isInMatrix (board, i, j) {
     return true;
 
 }
-export default search;
+
+async function checkWord (board, word) {
+    for (let k = 0; k < board.length; k++) {
+        for (let l = 0; l < board[0].length; l++) {
+            let used = [];
+            let current_char = 0;
+            if (board[k][l] === word[0]) {
+                used.push(k + '-' + l);
+                current_char++;
+                let result = await search(board, k, l, used, word, current_char);
+                console.log('main: ' + result);
+                if (result === true) {
+                    return result;
+                }
+            }
+        }
+    }
+    return false;
+
+}
+export default checkWord;

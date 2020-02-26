@@ -1,73 +1,53 @@
 import React from 'react';
-import searchService from '../services/search';
+import wordChecker from '../services/wordChecker';
+import { connect } from "react-redux";
+import { addScore, addWord } from "../redux/actions";
+
 class InputBox extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             word: '',
-            characters: [
-                ['x', 'j', 'o', 'y'],
-                ['u', 'r', 't', 's'],
-                ['s', 'u', 'n', 's'],
-                ['i', 'o', 'a', 'l'],
-            ]
         }
 
-        this.checkWord = this.checkWord.bind(this);
+        this.submitWord = this.submitWord.bind(this);
         this.onWordChange = this.onWordChange.bind(this);
+        this.keyPressed = this.keyPressed.bind(this);
     }
 
 
     inputBox () {
         return (<div>
-            <input type="text" value={this.state.word} onChange={this.onWordChange}></input>
-            <button onClick={this.checkWord}>Submit</button>
+            <input type="text" value={this.state.word} onChange={this.onWordChange} onKeyPress={this.keyPressed}></input>
+            <button onClick={this.submitWord}>Submit</button>
         </div>);
     }
 
-    /* async componentDidMount () {
-        await this.setState({ word: 'run' })
-        if (this.checkWord()) {
-            alert('found!!!')
-        } else {
-            alert('not found!!!')
+    keyPressed (e) {
+        if (e.charCode === 13) {
+            this.submitWord();
         }
-    } */
-
-
-    async checkWord (e) {
-        for (let k = 0; k < this.state.characters.length; k++) {
-            for (let l = 0; l < this.state.characters[0].length; l++) {
-                let used = [];
-                let current_char = 0;
-                if (this.state.characters[k][l] === this.state.word[0]) {
-                    // console.log('found ' + this.state.word[0] + ' at ' + k + ',' + l)
-                    used.push(k + '-' + l);
-                    current_char++;
-                    let result = await searchService(this.state.characters, k, l, used, this.state.word, current_char);
-                    console.log('main: ' + result);
-                    if (result === true) {
-                        return result;
-                    }
-                }
-            }
-        }
-        return false;
-
     }
 
-    initUsed () {
-        var used = [];
-        // console.log('char 0 length:' + this.state.characters[0].length)
-        for (let k = 0; k < this.state.characters.length; k++) {
-            var falsValue = [];
-            for (let l = 0; l < this.state.characters[0].length; l++) {
-                falsValue.push(false)
-            }
-            used.push(falsValue);
+    async submitWord () {
+        let doesWordExist = await wordChecker(this.props.characters, this.state.word);
+        let isWordUsed = this.props.words.includes(this.state.word);
+        let isWordCorrect = true
+        if (!isWordCorrect) {
+
+        } else if (!doesWordExist) {
+
+        } else if (isWordUsed) {
+
         }
-        return used;
+        else {
+            this.props.addWord(this.state.word)
+            this.props.addScore(this.state.word.length);
+            this.setState({ word: '' });
+        }
     }
+
+
 
     onWordChange (e) {
         this.setState({ word: e.target.value });
@@ -77,4 +57,12 @@ class InputBox extends React.Component {
         return this.inputBox();
     }
 }
-export default InputBox;
+const mapStateToProps = state => {
+    let { words, score, characters } = state.boggleReducers === undefined ? [] : state.boggleReducers;
+    return { words, score, characters };
+};
+const mapDispatchToProps = {
+    addScore,
+    addWord
+}
+export default connect(mapStateToProps, mapDispatchToProps)(InputBox);

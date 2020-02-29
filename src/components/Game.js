@@ -11,6 +11,7 @@ class Game extends React.Component {
             word: '',
             errorMessage: '',
             gameStarted: false,
+            checking: false,
             timer: ''
         }
 
@@ -32,7 +33,7 @@ class Game extends React.Component {
     game () {
         let errorBox = this.errorBox()
         let btn = '';
-        let wordInput = <input type="text" value={this.state.word} onChange={this.onWordChange} onKeyPress={this.keyPressed} disabled={!this.state.gameStarted}></input>;
+        let wordInput = <input type="text" value={this.state.word} onChange={this.onWordChange} onKeyPress={this.keyPressed} disabled={!this.state.gameStarted} readOnly={this.state.checking}></input>;
         let timer = <span>{this.state.timer}</span>;
         if (this.state.gameStarted) {
             btn = <button onClick={this.submitWord}>Submit Word</button>;
@@ -58,8 +59,19 @@ class Game extends React.Component {
             this.submitWord();
         }
     }
+
+    initState () {
+        this.setState({
+            word: '',
+            errorMessage: '',
+            gameStarted: false,
+            checking: false,
+            timer: ''
+        })
+    }
     async startGame () {
         console.log('game started');
+        this.initState();
         this.props.resetScore();
         this.setState({ gameStarted: true });
         let gametime = 60;
@@ -83,35 +95,35 @@ class Game extends React.Component {
     endGame () {
         console.log('reset geme');
         this.props.getCharacters()
-        this.setState({ gameStarted: false, timer: '' });
+        this.setState({ gameStarted: false, timer: '', errorMessage: '' });
     }
 
     async submitWord () {
+        this.setState({ checking: true })
         let isWordUsed = this.props.words.includes(this.state.word);
         if (isWordUsed) {
             console.log('word already used');
-            this.setState({ errorMessage: 'word already used' });
+            this.setState({ errorMessage: 'word already used', checking: false });
             return;
         }
 
         let doesWordExist = await wordChecker(this.props.characters, this.state.word);
         if (!doesWordExist) {
             console.log('word doesnt exist');
-            this.setState({ errorMessage: 'word does not exist in the board' });
+            this.setState({ errorMessage: 'word does not exist in the board', checking: false });
             return;
         }
 
         let isWordCorrect = await checkSpell(this.state.word);
         if (!isWordCorrect) {
             console.log('not word');
-            this.setState({ errorMessage: 'word is not in dictionary' });
+            this.setState({ errorMessage: 'word is not in dictionary', checking: false });
             return;
         }
 
-        this.setState({ errorMessage: '' });
         this.props.addWord(this.state.word)
         this.props.addScore(this.state.word.length);
-        this.setState({ word: '' });
+        this.setState({ errorMessage: '', word: '', checking: false });
 
     }
 

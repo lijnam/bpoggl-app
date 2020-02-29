@@ -1,5 +1,4 @@
-import { ADD_SCORE, ADD_WORD_TO_LIST, GET_CHARS } from "../actionTypes";
-
+import { ADD_SCORE, ADD_WORD_TO_LIST, GET_CHARS, RESET_SCORE } from "../actionTypes";
 const initialState = {
   score: 0,
   words: [],
@@ -15,20 +14,20 @@ export default function (state = initialState, action) {
     case ADD_WORD_TO_LIST:
       const { word } = action.payload;
       return { ...state, words: [...state.words, word] };
-
-    case GET_CHARS:
-      // let { chars } = action.payload;
-      // console.log(chars);
-
+    case RESET_SCORE:
       return {
         ...state,
-        characters: [
-          ['x', 'j', 'o', 'y'],
-          ['u', 'r', 't', 's'],
-          ['s', 'u', 'n', 's'],
-          ['i', 'o', 'a', 'l']
-        ]
-      };;
+        score: 0,
+        words: [],
+      };
+
+    case GET_CHARS:
+      let { chars } = action.payload;
+      console.log(chars);
+      return {
+        ...state,
+        characters: chars
+      };
     default:
       return state
   }

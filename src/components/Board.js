@@ -1,29 +1,41 @@
 import React from 'react';
-import ScoreBoard from './ScoreBoard';
-import InputBox from './InputBox';
-import Characters from './Characters';
-import WordList from './WordList';
+import { connect } from "react-redux";
+import { getCharacters } from "../redux/actions";
 class Board extends React.Component {
+    componentDidMount () {
+        this.props.getCharacters();
+    }
 
+    table () {
+        var characters = this.props.characters;
+        var tableData = characters.map(row => {
+            let td = row.map((ch, index) => {
+                return <td key={index}>{ch.toUpperCase()}</td>;
+            });
+            return <tr key={row}>{td}</tr>;
+        });
 
-
-    board () {
-        return (< div className="row" >
-            <div className="col-md-8">
-                <Characters></Characters>
-                <InputBox></InputBox>
-            </div>
-            <div className="col-md-2">
-                <ScoreBoard></ScoreBoard>
-                <WordList></WordList>
-            </div>
-
-        </div >
-        );
+        return (<table className="table board" border="1">
+            <tbody>
+                {tableData}
+            </tbody>
+        </table>);
     }
 
     render () {
-        return this.board();
+        return this.table();
     }
 }
-export default Board;
+const mapStateToProps = state => {
+    let { characters } = state.boggleReducers === undefined ? [] : state.boggleReducers;
+    return { characters };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        getCharacters: () => {
+            dispatch(getCharacters());
+
+        },
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Board);;

@@ -1,6 +1,6 @@
-import { createStore } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import rootReducer from "./reducers";
-
+import thunk from 'redux-thunk';
 const initialState = {
     // score: 0,
     // words: [],
@@ -13,8 +13,8 @@ const initialState = {
 };
 const store = createStore(
     rootReducer,
-    initialState,
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    applyMiddleware(thunk),
+
 );
 store.subscribe(() => console.log('updated state', store.getState()));
 

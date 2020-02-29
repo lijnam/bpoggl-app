@@ -8,12 +8,10 @@ async function search (board, k, l, used, word, current_char) {
                 /* should be in matrix  */
                 _isInMatrix
 
-                /* dont use self character */
-                && board[i][j] !== board[k][l]
-
                 /* char should not be used */
                 && !isUsed(used, i, j)
 
+                /* is current character */
                 && board[i][j] === word[current_char]
             ) {
                 current_char++;
@@ -62,6 +60,7 @@ function isInMatrix (board, i, j) {
 }
 
 async function checkWord (board, word) {
+    word = word.toUpperCase();
     for (let k = 0; k < board.length; k++) {
         for (let l = 0; l < board[0].length; l++) {
             let used = [];

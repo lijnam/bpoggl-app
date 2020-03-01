@@ -1,3 +1,13 @@
+/**
+ * Searches the characters around the  current character of the word
+ * @param {Array} board 
+ * @param {number} k 
+ * @param {number} l 
+ * @param {Array} used 
+ * @param {String} word 
+ * @param {number} current_char 
+ * @returns {Boolean}
+ */
 async function search (board, k, l, used, word, current_char) {
     for (let i = k - 1; i <= k + 1; i++) {
         for (let j = l - 1; j <= l + 1; j++) {
@@ -37,10 +47,24 @@ async function search (board, k, l, used, word, current_char) {
     return false;
 }
 
+/**
+ * Checks if the word is used or not
+ * @param {Array} used 
+ * @param {number} i 
+ * @param {number} j 
+ * @returns {boolean}
+ */
 function isUsed (used, i, j) {
     return used.includes(i + '-' + j);
 }
 
+/**
+ *  Checks if the character is in matrix or not
+ * @param {Array} board 
+ * @param {number} i 
+ * @param {number} j 
+ * @returns {Boolean}
+ */
 function isInMatrix (board, i, j) {
     let cols = board[0].length - 1;
     let rows = board.length - 1;
@@ -59,6 +83,13 @@ function isInMatrix (board, i, j) {
 
 }
 
+/**
+ * Checks each character in the board
+ * When first character is matched, it calls search method to search around the character 
+ * @param {Array} board 
+ * @param {String} word 
+ * @returns {Boolean}
+ */
 async function checkWord (board, word) {
     word = word.toUpperCase();
     for (let k = 0; k < board.length; k++) {
@@ -79,4 +110,5 @@ async function checkWord (board, word) {
     return false;
 
 }
+
 export default checkWord;

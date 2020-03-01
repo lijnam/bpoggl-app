@@ -98,6 +98,7 @@ class Game extends React.Component {
         this.setState({ gameStarted: false, timer: '', errorMessage: '' });
     }
 
+   
     async submitWord () {
         this.setState({ checking: true })
         let isWordUsed = this.props.words.includes(this.state.word);
@@ -140,6 +141,7 @@ const mapStateToProps = state => {
     let { words, score, characters } = state.boggleReducers === undefined ? [] : state.boggleReducers;
     return { words, score, characters };
 };
+
 const mapDispatchToProps = {
     addScore,
     addWord,
